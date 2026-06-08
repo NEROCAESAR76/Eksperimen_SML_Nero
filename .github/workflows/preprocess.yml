@@ -1,0 +1,32 @@
+name: Automate Data Preprocessing
+on:
+  push:
+    branches: [ main ] # Jalan otomatis setiap ada push ke branch main
+
+jobs:
+  preprocess_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12.7' # Wajib sesuai standar Dicoding
+
+      - name: Install Dependencies
+        run: |
+          pip install pandas numpy
+
+      - name: Run Preprocessing Script
+        run: |
+          python preprocessing/automate_Nero.py
+
+      - name: Commit and Push Clean Data
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add preprocessing/namadataset_preprocessing/
+          git commit -m "Auto-update: Dataset berhasil diproses robot" || echo "Tidak ada perubahan data"
+          git push
